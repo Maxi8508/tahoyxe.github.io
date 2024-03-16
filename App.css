@@ -6,12 +6,15 @@ body {
     padding: 0;
 }
 
+
 /* Container styles */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    position: relative; /* Set position relative */
 }
+
 
 /* Header styles */
 h1 {
@@ -70,6 +73,8 @@ h1 {
     background-color: #45a049;
 }
 
+
+
 /* Cart button styles */
 #cartBtn {
     background-color: #71601c;
@@ -79,6 +84,9 @@ h1 {
     padding: 10px 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    position: absolute; /* Position absolutely */
+    top: 20px; /* Adjust top position as needed */
+    right: 20px; /* Adjust right position as needed */
 }
 
 #cartBtn:hover {

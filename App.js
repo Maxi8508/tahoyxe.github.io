@@ -1,8 +1,8 @@
 // Sample data for products
 const products = [
-    { id: 1, name: 'Strawberry Taho', price: 20, image: 'images.jpg' },
-    { id: 2, name: 'Mango Taho', price: 20, image: 'images.jpg' },
-    { id: 3, name: 'Classic Taho', price: 20, image: 'images.jpg' }
+    { id: 1, name: 'Classic Taho', price: 20, image: 'src/images.jpg' },
+    { id: 2, name: 'Strawberry Taho', price: 20, image: 'src/images.jpg' },
+    { id: 3, name: 'Mango Taho', price: 20, image: 'src/images.jpg' }
 ];
 
 // Initialize an empty cart
@@ -32,7 +32,13 @@ function displayProducts() {
 function addToCart(id) {
     const productToAdd = products.find(product => product.id === id);
     if (productToAdd) {
-        cart.push(productToAdd);
+        const existingCartItem = cart.find(item => item.id === id);
+        if (existingCartItem) {
+            existingCartItem.quantity++;
+        } else {
+            productToAdd.quantity = 1;
+            cart.push(productToAdd);
+        }
         updateCartDisplay();
         updateCartItemCount();
     }
@@ -42,6 +48,7 @@ function addToCart(id) {
 function updateCartDisplay() {
     const cartContainer = document.querySelector('.cart-container');
     cartContainer.innerHTML = '';
+    let totalAmount = 0;
     if (cart.length === 0) {
         cartContainer.innerHTML = '<p>Cart is empty</p>';
     } else {
@@ -49,16 +56,23 @@ function updateCartDisplay() {
             const cartItem = document.createElement('div');
             cartItem.classList.add('cart-item');
             cartItem.innerHTML = `
-                <p>${item.name} - $${item.price}</p>
+                <p>${item.name} - $${item.price} x${item.quantity}</p>
             `;
             cartContainer.appendChild(cartItem);
+            totalAmount += item.price * item.quantity; // Calculate total amount
         });
     }
+
+    // Add total amount to the cart
+    const totalElement = document.createElement('div');
+    totalElement.classList.add('total');
+    totalElement.innerHTML = `<strong>Total: $${totalAmount.toFixed(2)}</strong>`;
+    cartContainer.appendChild(totalElement);
 }
 
 // Function to update cart item count
 function updateCartItemCount() {
-    cartItemCount++;
+    cartItemCount = cart.reduce((total, item) => total + item.quantity, 0);
     const cartBtn = document.getElementById('cartBtn');
     cartBtn.textContent = `Cart (${cartItemCount})`;
 }
@@ -100,14 +114,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Event listener for close button
-// Event listener for close button
 document.addEventListener('DOMContentLoaded', function() {
     const closeCartButton = document.querySelector('.close-cart');
     if (closeCartButton) {
         closeCartButton.addEventListener('click', closeCartModal);
     }
 });
-
 
 // Event listener for overlay click
 const cartOverlay = document.getElementById('cartOverlay');
@@ -117,3 +129,10 @@ if (cartOverlay) {
 
 // Initialize
 displayProducts();
+
+// Add event listener to make phone number clickable
+const phoneNumberElement = document.querySelector('.phone-number');
+phoneNumberElement.addEventListener('click', function() {
+    const phoneNumber = phoneNumberElement.textContent.trim();
+    window.location.href = 'tel:' + phoneNumber;
+});
